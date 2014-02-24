@@ -44,9 +44,10 @@ import de.schildbach.wallet.integration.android.BitcoinIntegration;
 public class SampleActivity extends Activity
 {
 	private static final long AMOUNT = 1000000;
-	private static final String DONATION_ADDRESS = "18CK5k1gajRKKSC7yVSTXT9LUzbheh1XY4"; // mainnet
-	private static final String DONATION_ADDRESS2 = "1PZmMahjbfsTy6DsaRyfStzoWTPppWwDnZ"; // mainnet
-	// private static final String DONATION_ADDRESS = "mwEacn7pYszzxfgcNaVUzYvzL6ypRJzB6A"; // testnet
+	// private static final String DONATION_ADDRESS = "18CK5k1gajRKKSC7yVSTXT9LUzbheh1XY4"; // mainnet
+	// private static final String DONATION_ADDRESS2 = "1PZmMahjbfsTy6DsaRyfStzoWTPppWwDnZ"; // mainnet
+	private static final String DONATION_ADDRESS = "mkCLjaXncyw8eSWJBcBtnTgviU85z5PfwS"; // testnet
+	private static final String DONATION_ADDRESS2 = "mwEacn7pYszzxfgcNaVUzYvzL6ypRJzB6A"; // testnet
 	private static final String MEMO = "Sample donation";
 	private static final int REQUEST_CODE = 0;
 
