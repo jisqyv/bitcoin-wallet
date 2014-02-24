@@ -517,15 +517,16 @@ public final class SendCoinsFragment extends SherlockFragment
 				final byte[] ndefMessagePayload = Nfc.extractMimePayload(Constants.MIMETYPE_PAYMENTREQUEST, ndefMessage);
 				initStateFromPaymentRequest(mimeType, ndefMessagePayload);
 			}
-			else if ((Intent.ACTION_VIEW.equals(action)) && Constants.MIMETYPE_PAYMENTREQUEST.equals(mimeType) && intentUri != null)
+			else if ((Intent.ACTION_VIEW.equals(action)) && Constants.MIMETYPE_PAYMENTREQUEST.equals(mimeType))
 			{
-				initStateFromIntentUri(mimeType, intentUri);
-			}
-			else if ((Intent.ACTION_VIEW.equals(action)) && Constants.MIMETYPE_PAYMENTREQUEST.equals(mimeType)
-					&& intent.hasExtra(BitcoinIntegrationV2.INTENT_EXTRA_PAYMENTREQUEST))
-			{
-				final byte[] paymentRequest = intent.getByteArrayExtra(BitcoinIntegrationV2.INTENT_EXTRA_PAYMENTREQUEST);
-				initStateFromPaymentRequest(mimeType, paymentRequest);
+				final byte[] paymentRequest = BitcoinIntegration.paymentRequestFromIntent(intent);
+
+				if (intentUri != null)
+					initStateFromIntentUri(mimeType, intentUri);
+				else if (paymentRequest != null)
+					initStateFromPaymentRequest(mimeType, paymentRequest);
+				else
+					throw new IllegalArgumentException();
 			}
 			else if (intent.hasExtra(SendCoinsActivity.INTENT_EXTRA_PAYMENT_INTENT))
 			{

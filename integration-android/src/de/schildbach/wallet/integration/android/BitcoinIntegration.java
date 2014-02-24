@@ -150,6 +150,20 @@ public final class BitcoinIntegration
 	}
 
 	/**
+	 * Get payment request from intent. Meant for usage by applications accepting payment requests.
+	 * 
+	 * @param intent
+	 *            intent
+	 * @return payment request or null
+	 */
+	public static byte[] paymentRequestFromIntent(final Intent intent)
+	{
+		final byte[] paymentRequest = intent.getByteArrayExtra(BitcoinIntegration.INTENT_EXTRA_PAYMENTREQUEST);
+
+		return paymentRequest;
+	}
+
+	/**
 	 * Put transaction hash into result intent. Meant for usage by Bitcoin wallet applications.
 	 * 
 	 * @param result
