@@ -43,7 +43,7 @@ import de.schildbach.wallet.integration.android.BitcoinIntegration;
  */
 public class SampleActivity extends Activity
 {
-	private static final long AMOUNT = 1000000;
+	private static final long AMOUNT = 500000;
 	// private static final String DONATION_ADDRESS = "18CK5k1gajRKKSC7yVSTXT9LUzbheh1XY4"; // mainnet
 	// private static final String DONATION_ADDRESS2 = "1PZmMahjbfsTy6DsaRyfStzoWTPppWwDnZ"; // mainnet
 	private static final String DONATION_ADDRESS = "mkCLjaXncyw8eSWJBcBtnTgviU85z5PfwS"; // testnet
@@ -66,7 +66,7 @@ public class SampleActivity extends Activity
 		{
 			public void onClick(final View v)
 			{
-				BitcoinIntegration.requestForResult(SampleActivity.this, REQUEST_CODE, DONATION_ADDRESS);
+				handleDonate();
 			}
 		});
 
@@ -75,38 +75,48 @@ public class SampleActivity extends Activity
 		{
 			public void onClick(final View v)
 			{
-				try
-				{
-					final NetworkParameters params = Address.getParametersFromAddress(DONATION_ADDRESS);
-
-					final Protos.Output.Builder output1 = Protos.Output.newBuilder();
-					output1.setAmount(AMOUNT);
-					output1.setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(new Address(params, DONATION_ADDRESS)).getProgram()));
-
-					final Protos.Output.Builder output2 = Protos.Output.newBuilder();
-					output2.setAmount(AMOUNT);
-					output2.setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(new Address(params, DONATION_ADDRESS2)).getProgram()));
-
-					final Protos.PaymentDetails.Builder paymentDetails = Protos.PaymentDetails.newBuilder();
-					paymentDetails.setNetwork(params.getPaymentProtocolId());
-					paymentDetails.addOutputs(output1);
-					paymentDetails.addOutputs(output2);
-					paymentDetails.setMemo(MEMO);
-					paymentDetails.setTime(System.currentTimeMillis());
-
-					final Protos.PaymentRequest.Builder paymentRequest = Protos.PaymentRequest.newBuilder();
-					paymentRequest.setSerializedPaymentDetails(paymentDetails.build().toByteString());
-
-					BitcoinIntegration.requestForResult(SampleActivity.this, REQUEST_CODE, paymentRequest.build().toByteArray());
-				}
-				catch (final AddressFormatException x)
-				{
-					throw new RuntimeException(x);
-				}
+				handleRequest();
 			}
 		});
 
 		donateMessage = (TextView) findViewById(R.id.sample_donate_message);
+	}
+
+	private void handleDonate()
+	{
+		BitcoinIntegration.requestForResult(SampleActivity.this, REQUEST_CODE, DONATION_ADDRESS);
+	}
+
+	private void handleRequest()
+	{
+		try
+		{
+			final NetworkParameters params = Address.getParametersFromAddress(DONATION_ADDRESS);
+
+			final Protos.Output.Builder output1 = Protos.Output.newBuilder();
+			output1.setAmount(AMOUNT);
+			output1.setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(new Address(params, DONATION_ADDRESS)).getProgram()));
+
+			final Protos.Output.Builder output2 = Protos.Output.newBuilder();
+			output2.setAmount(AMOUNT);
+			output2.setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(new Address(params, DONATION_ADDRESS2)).getProgram()));
+
+			final Protos.PaymentDetails.Builder paymentDetails = Protos.PaymentDetails.newBuilder();
+			paymentDetails.setNetwork(params.getPaymentProtocolId());
+			paymentDetails.addOutputs(output1);
+			paymentDetails.addOutputs(output2);
+			paymentDetails.setMemo(MEMO);
+			paymentDetails.setTime(System.currentTimeMillis());
+
+			final Protos.PaymentRequest.Builder paymentRequest = Protos.PaymentRequest.newBuilder();
+			paymentRequest.setSerializedPaymentDetails(paymentDetails.build().toByteString());
+
+			BitcoinIntegration.requestForResult(SampleActivity.this, REQUEST_CODE, paymentRequest.build().toByteArray());
+		}
+		catch (final AddressFormatException x)
+		{
+			throw new RuntimeException(x);
+		}
 	}
 
 	@Override
@@ -127,9 +137,6 @@ public class SampleActivity extends Activity
 					donateMessage.setText(messageBuilder);
 					donateMessage.setVisibility(View.VISIBLE);
 				}
-
-				donateButton.setEnabled(false);
-				donateButton.setText("Already donated");
 
 				Toast.makeText(this, "Thank you!", Toast.LENGTH_LONG).show();
 			}
