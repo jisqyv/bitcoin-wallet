@@ -119,7 +119,6 @@ public final class BitcoinIntegration
 	public static void transactionHashToResult(final Intent result, final String txHash)
 	{
 		result.putExtra(INTENT_EXTRA_TRANSACTION_HASH, txHash);
-		result.putExtra(INTENT_EXTRA_TRANSACTION_HASH_OLD, txHash);
 	}
 
 	/**
@@ -187,6 +186,4 @@ public final class BitcoinIntegration
 			context.startActivity(binaryIntent);
 		// else out of luck
 	}
-
-	private static final String INTENT_EXTRA_TRANSACTION_HASH_OLD = "transaction_id";
 }
